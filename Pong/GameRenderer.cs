@@ -22,11 +22,11 @@ namespace Pong
             e.Graphics.Clear(Color.White);
             if (Game != null)
             {
-                Brush b = new SolidBrush(Color.Red);
-                e.Graphics.FillEllipse(b, new Rectangle(Game.Ball.X, Game.Ball.Y, Game.BallSize.Width, Game.BallSize.Height));
+                foreach (var item in Game.DrawList)
+                {
+                    item.Draw(e.Graphics);
+                }
 
-                Rectangle rec = new Rectangle(Game.LeftRack.X,Game.LeftRack.Y,Game.LeftRackSize.Width,Game.LeftRackSize.Height);
-                e.Graphics.FillRectangle(b, rec);
             }
         }
     }

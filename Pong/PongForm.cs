@@ -17,6 +17,7 @@ namespace Pong
             InitializeComponent();
             game = new PongGame();
             game.gameRenderSize = gameRenderer.ClientSize;
+            game.init();
             gameRenderer.Game = game;
             game.speed = (int)speedPicker.Value;
 
@@ -36,7 +37,7 @@ namespace Pong
                 timer.Stop();
                 if(!msg)
                 {
-                MessageBox.Show("You lose!!");
+              //  MessageBox.Show("You lose!!");
                 msg = true;
                 }
               
@@ -52,6 +53,7 @@ namespace Pong
 
                     case Keys.Up: game.Up = true; break;
                     case Keys.Down: game.Down = true; break;
+                    case Keys.Tab: game.rightActive = !game.rightActive; break;
                 }
                 return true;
             }
