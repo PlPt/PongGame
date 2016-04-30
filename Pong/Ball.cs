@@ -27,7 +27,7 @@ namespace Pong
 
         public void Draw(Graphics g)
         {
-            Brush b = new SolidBrush(Color.Red);
+            Brush b = new SolidBrush(Color.Blue);
            g.FillEllipse(b, new Rectangle(Position.X, Position.Y, Size.Width, Size.Height));
         }
 
@@ -37,14 +37,14 @@ namespace Pong
             Position.Y += (int)((dy * elapsedSeconds) * speed);
         }
 
-        public bool isCollidingWall(Size gameRenderSize)
+        public PongGame.GameStatus isCollidingWall(Size gameRenderSize)
         {
              if (Position.X < 0)   // Left
             {
                 dx *= -1;
                 Position.X = 0;
                 Console.WriteLine("Colision left " + Position.Y);
-                return true;
+                return PongGame.GameStatus.Lose;
             }
 
             if ((Position.X + Size.Width) > gameRenderSize.Width) //  right
@@ -53,11 +53,9 @@ namespace Pong
                 Position.X = gameRenderSize.Width - Size.Width;
                 Console.WriteLine("Colision right " + Position.Y);
 
-                int diff = Position.Y - Ball._ii[Ball._ii.Count - 1];
+              
 
-                Console.WriteLine("diff: " + diff);
-                      
-                return true;
+                return PongGame.GameStatus.Won;
 
 
             }
@@ -79,7 +77,7 @@ namespace Pong
                 
                 
             }
-            return false ;
+            return PongGame.GameStatus.Running;
         }
 
         public Racket.Direction isCollidingWallEX(Size gameRenderSize)
@@ -122,26 +120,24 @@ namespace Pong
         }
 
 
-        public static void calc(PongGame g,Ball b)
+        public static void calc(PongGame g,Ball b,Racket r,Racket.Direction dir)
         {
             Ball imag = new Ball(new Point(b.Position.X, b.Position.Y), new Size(50, 50));
             imag.dx = int.Parse(b.dx.ToString());
             imag.dy = int.Parse(b.dy.ToString());
            
             
-            while (imag.isCollidingWallEX(g.gameRenderSize)!=Racket.Direction.Right)
+            while (imag.isCollidingWallEX(g.gameRenderSize)!=dir)
             {
                 imag.Move(0.2d, 1);
-
-                               
-
+ 
             } 
 
             Console.WriteLine("while ended colliding: " + imag.Position.ToString());
             _ii.Add(imag.Position.Y);
-            int i = imag.Position.Y - imag.Size.Height/2 ;
+            int i = imag.Position.Y - (int)(imag.Size.Height);  ///0.5f
             Console.WriteLine("moving to: " + i);
-            g.rightRacket.Position.Y = i;
+            r.MoveTo(i,g.gameRenderSize,g.speed);
            
         }
 

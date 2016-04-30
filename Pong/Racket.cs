@@ -14,6 +14,7 @@ namespace Pong
 
         public Point Position { get; set; }
         public Size Size { get; set; }
+       public const int  xDistance =20;
         public int dy = 300;
 
 
@@ -52,14 +53,24 @@ namespace Pong
 
         }
 
-
-        public void MoveTo(int Y,Size gSize)
+        Timer dispatcherTimer;
+        public void MoveTo(int Y,Size gSize,int speed)  //......
         {
-                 if(Y<0)
+            if(dispatcherTimer!=null)
+            {
+                if (dispatcherTimer.Enabled) dispatcherTimer.Stop();
+            }
+                 if(Y<=0)
                  {
                      Y = 1;
                  }
 
+                  if(gSize.Height<=Y)
+                  {
+
+                      Y = gSize.Height-10;
+                  }
+                      
                  int ddy = 1;
 
                  if (Position.Y > Y)
@@ -67,11 +78,13 @@ namespace Pong
                      ddy = -1;
                  }
 
-            var dispatcherTimer = new Timer { Interval =5 };
+          
+
+             dispatcherTimer = new Timer { Interval =10 };
             dispatcherTimer.Tick += (sender, args) =>
             {
                 var timer = sender as Timer;
-                if (timer != null && (Position.Y==Y-Size.Height))
+                if (timer != null && (Position.Y >= gSize.Height || Position.Y == Y))
                 {
                     timer.Stop();
                     Console.WriteLine("moved: " + Position.ToString());
@@ -83,7 +96,7 @@ namespace Pong
                 }
 
              
-                Position.Y += ddy;
+                Position.Y += ddy*speed;
             };
             dispatcherTimer.Start();
         }

@@ -12,6 +12,8 @@ namespace Pong
     public partial class PongForm : Form
     {
         PongGame game;
+
+     
         public PongForm()
         {
             InitializeComponent();
@@ -21,13 +23,13 @@ namespace Pong
             gameRenderer.Game = game;
             game.speed = (int)speedPicker.Value;
 
-            gameRenderer.Resize += new EventHandler((s, e) => { game.gameRenderSize = gameRenderer.ClientSize; });
+            gameRenderer.Resize += new EventHandler((s, e) => { game.gameRenderSize = gameRenderer.ClientSize; game.rightRacket.Position.X = gameRenderer.ClientSize.Width - Racket.xDistance; });
            
         }
         bool msg = false;
         private void timer_Tick(object sender, EventArgs e)
         {
-            if (!game.lose)
+            if (game.Status == PongGame.GameStatus.Running)
             {
                 game.Update();
                 gameRenderer.Invalidate();
@@ -37,7 +39,20 @@ namespace Pong
                 timer.Stop();
                 if(!msg)
                 {
-              //  MessageBox.Show("You lose!!");
+
+                    switch (game.Status)
+                    {
+                       
+                      case PongGame.GameStatus.Won:
+                            MessageBox.Show("You won!");
+                            break;
+                        case PongGame.GameStatus.Lose:
+                            MessageBox.Show("You lose!");
+                            break;
+                        default:
+                            break;
+                    }
+
                 msg = true;
                 }
               
@@ -53,7 +68,7 @@ namespace Pong
 
                     case Keys.Up: game.Up = true; break;
                     case Keys.Down: game.Down = true; break;
-                    case Keys.Tab: game.rightActive = !game.rightActive; break;
+                  //  case Keys.Tab: game.rightActive = !game.rightActive; break;
                 }
                 return true;
             }
@@ -100,7 +115,7 @@ namespace Pong
         private void btnStart_Click(object sender, EventArgs e)
         {
             msg = false;
-            game.lose = false;
+            game.Status = PongGame.GameStatus.Running;
             game.Start();
             timer.Start();
             gameRenderer.Focus();
@@ -109,6 +124,11 @@ namespace Pong
         private void speedPicker_ValueChanged(object sender, EventArgs e)
         {
             game.speed = (int)speedPicker.Value;
+        }
+
+        private void PongForm_Load(object sender, EventArgs e)
+        {
+
         }
        
     }

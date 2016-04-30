@@ -11,7 +11,7 @@ namespace Pong
 {
     public class PongGame
     {
-
+        public enum GameStatus { Running, Stopped, Won, Lose }
         #region varDef
         Ball ball;
     
@@ -23,12 +23,13 @@ namespace Pong
 
         public bool Up { get; set; }
         public bool Down { get; set; }
-        public bool lose = false;
-        public bool rightActive = true;
+      
+        public bool rightActive = false;
         public int speed = 1;     
         List<IDrawable> drawList = new List<IDrawable>();
         #endregion
         public List<IDrawable> DrawList { get { return drawList; } }
+        public GameStatus Status { get; set; }
 
         
 
@@ -37,7 +38,7 @@ namespace Pong
 
         public PongGame()
         {
-         
+            Status = GameStatus.Stopped;
         }
        
         public void Start()
@@ -65,8 +66,7 @@ namespace Pong
             }
             
             #region collisions
-           //lose = 
-               ball.isCollidingWall(gameRenderSize);
+           Status =    ball.isCollidingWall(gameRenderSize);
           
            checkColision(ball, leftRacket,Racket.Direction.Left,true);
            checkColision(ball, rightRacket,Racket.Direction.Right);
@@ -85,35 +85,23 @@ namespace Pong
       
         public void checkColision(Ball b, Racket racket,Racket.Direction dir,bool calc = false)
         {
-            int rackTop = racket.Position.Y - b.Size.Height / 2;
-            int rackBot = racket.Position.Y + racket.Size.Height + b.Size.Height / 2;
+            int rackTop = racket.Position.Y -b.Size.Height / 2;
+            int rackBot = racket.Position.Y + racket.Size.Height +b.Size.Height / 2;
 
             //Console.WriteLine("{0}/{1}", rackTop, rackBot);
 
             if (dir == Racket.Direction.Right)
             {
-                if (b.Position.X >= (racket.Position.X - b.Size.Width) )
+               
+                if (b.Position.X >= (racket.Position.X - b.Size.Width ))
                 {
+                    Console.WriteLine("LOOG  {0}>={1}", b.Position.X, racket.Position.X - (b.Size.Width / 2) - racket.Size.Width);
                     if (b.Position.Y >= rackTop && b.Position.Y <= rackBot)   //evntl. toleranzzone berechnen
                     {
                         b.dx *= -1;
-                        b.Position.X = b.Position.X - 3;
+                        b.Position.X = b.Position.X - 5;
                         Console.WriteLine("Collided right:" + b.Position.ToString());
-                        int diff = b.Position.Y - Ball._ii[Ball._ii.Count - 1];
 
-                        Console.WriteLine("diff: " + diff);
-                      
-                    }
-                }
-            }
-            else if(dir == Racket.Direction.Left)
-            {
-                if (b.Position.X <= (racket.Position.X))
-                {
-                    if (b.Position.Y >= rackTop && b.Position.Y <= rackBot)
-                    {
-                        b.dx *= -1;
-                        b.Position.X = b.Position.X + 3;
                         if (calc)
                         {
 
@@ -127,7 +115,40 @@ namespace Pong
                                 }
 
                                 Console.WriteLine("Calc pos");
-                            Ball.calc(this, ball.Clone());
+                                Ball.calc(this, ball.Clone(),leftRacket,Racket.Direction.Left);
+                            };
+                            dispatcherTimer.Start();
+
+                        }
+                       
+                      
+                    }
+                }
+            }
+            else if(dir == Racket.Direction.Left)
+            {
+                
+                if (b.Position.X <= (racket.Position.X + b.Size.Width/12))
+                {
+                   
+                    if (b.Position.Y >= rackTop && b.Position.Y <= rackBot)
+                    {
+                        b.dx *= -1;
+                        b.Position.X = b.Position.X + 5;
+                        if (calc)
+                        {
+
+                            var dispatcherTimer = new Timer { Interval = 500 };
+                            dispatcherTimer.Tick += (sender, args) =>
+                            {
+                                var timer = sender as Timer;
+                                if (timer != null)
+                                {
+                                    timer.Stop();
+                                }
+
+                                Console.WriteLine("Calc pos");
+                                Ball.calc(this, ball.Clone(), rightRacket, Racket.Direction.Right);
                             };
                             dispatcherTimer.Start();
                             
@@ -158,8 +179,8 @@ namespace Pong
         internal void init()
         {
             ball = new Ball(new Point(430, 30), new Size(50, 50));
-            leftRacket = new Racket(new Point(15, 225), new Size(10, 170));
-            rightRacket = new Racket(new Point(gameRenderSize.Width - 50, 225), new Size(10, 170));
+            leftRacket = new Racket(new Point(Racket.xDistance, 20), new Size(10, 170));
+            rightRacket = new Racket(new Point(gameRenderSize.Width - Racket.xDistance, 225), new Size(10, 170));
            
 
             drawList.Add(ball);
