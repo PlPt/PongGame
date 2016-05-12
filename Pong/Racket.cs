@@ -118,12 +118,12 @@ namespace Pong
                 if (timer != null && (Position.Y >= gSize.Height || Position.Y == Y))
                 {
                     timer.Stop();
-                    Console.WriteLine("moved: " + Position.ToString());
+                  //  Console.WriteLine("moved: " + Position.ToString());
                     return;
                 }
                 else
                 {
-                    Console.WriteLine("{0}=={1}", Position.Y - Size.Height, Y);
+                   // Console.WriteLine("{0}=={1}", Position.Y - Size.Height, Y);
                 }
 
              

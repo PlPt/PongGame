@@ -166,10 +166,10 @@ namespace Pong
  
             } 
 
-            Console.WriteLine("while ended colliding: " + imag.Position.ToString());
+           // Console.WriteLine("while ended colliding: " + imag.Position.ToString());
             _ii.Add(imag.Position.Y);
             int i = imag.Position.Y - (int)(imag.Size.Height);  ///0.5f
-            Console.WriteLine("moving to: " + i);
+           // Console.WriteLine("moving to: " + i);
             r.MoveTo(i,g.gameRenderSize,g.speed);
            
         }

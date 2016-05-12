@@ -28,6 +28,7 @@ namespace Pong
         Ball ball;
         Stopwatch watch = new Stopwatch();
         List<IDrawable> drawList = new List<IDrawable>();
+        bool calc = false;
 
         //public vars
         public Racket leftRacket;
@@ -58,6 +59,7 @@ namespace Pong
             Status = GameStatus.Stopped;
             this.gameRenderSize = gameRenderSize;
             init();
+           // test();
         }
 
         /// <summary>
@@ -93,8 +95,14 @@ namespace Pong
             #region collisions
             Status = ball.isCollidingWall(gameRenderSize);
 
-            checkColision(ball, leftRacket, Racket.Direction.Left, true);
+            checkColision(ball, leftRacket, Racket.Direction.Left);
             checkColision(ball, rightRacket, Racket.Direction.Right);
+
+            if( gameRenderSize.Width - ball.Position.X < 350 && ball.dx > 0 &&  !calc)
+            {
+                Ball.calc(this, ball.Clone(), rightRacket, Racket.Direction.Right);
+                calc = true;
+            }
 
             #endregion
 
@@ -127,12 +135,13 @@ namespace Pong
 
                 if (b.Position.X >= (racket.Position.X - b.Size.Width))
                 {
-                    Console.WriteLine("LOOG  {0}>={1}", b.Position.X, racket.Position.X - (b.Size.Width / 2) - racket.Size.Width);
+                  //  Console.WriteLine("LOOG  {0}>={1}", b.Position.X, racket.Position.X - (b.Size.Width / 2) - racket.Size.Width);
                     if (b.Position.Y >= rackTop && b.Position.Y <= rackBot)   //evntl. toleranzzone berechnen
                     {
                         b.dx *= -1;
                         b.Position.X = b.Position.X - 5;
                         Console.WriteLine("Collided right:" + b.Position.ToString());
+                      
 
                         if (calc)
                         {
@@ -167,6 +176,8 @@ namespace Pong
                     {
                         b.dx *= -1;
                         b.Position.X = b.Position.X + 5;
+                        Console.WriteLine("Collided left:" + b.Position.ToString());
+                        this.calc = false;
                         if (calc)
                         {
 
@@ -220,6 +231,76 @@ namespace Pong
             drawList.Add(ball);
             drawList.Add(leftRacket);
             drawList.Add(rightRacket);
+
+        }
+
+        public void test()
+        {
+           
+            List<Point> collisionList = new List<Point>();
+            int dx = ball.dx;
+            int dy = ball.dy;
+            Point ballCoordiantes = new Point(ball.Position.X,ball.Position.Y);
+            Size renSize = new Size(ball.Size.Width,ball.Size.Height);
+
+            for (int i = 0; i < 250; i++)
+            {
+
+
+                bool end = false;
+                while (!end)
+                {
+                    ballCoordiantes.X += dx/100;
+                    ballCoordiantes.Y += dy;
+
+                    if (ballCoordiantes.X < 0)   // Left
+                    {
+                        
+                        dx *= -1;
+                        ballCoordiantes.X = 0;
+
+                        collisionList.Add(new Point(ballCoordiantes.X, ballCoordiantes.Y));
+                        end = true;
+
+                    }
+
+                    if ((ballCoordiantes.X + renSize.Width) >= gameRenderSize.Width) //  right
+                    {
+                        dx *= -1;
+                        ballCoordiantes.X = gameRenderSize.Width - renSize.Width;
+                        Console.WriteLine("Colision right " + ballCoordiantes.Y);
+                        collisionList.Add(new Point(ballCoordiantes.X, ballCoordiantes.Y));
+
+                        end = true;
+                    }
+
+
+                    if (ballCoordiantes.Y < 0)    //top
+                    {
+                        dy *= -1;
+                        ballCoordiantes.Y = 0;
+
+
+
+                    }
+
+                    if ((ballCoordiantes.Y + renSize.Height) > gameRenderSize.Height)  //BOt
+                    {
+                        dy *= -1;
+                        ballCoordiantes.Y = gameRenderSize.Height - renSize.Height;
+
+
+                    }
+
+
+
+                }
+            }
+
+            foreach (var item in collisionList)
+            {
+                Console.WriteLine(item.ToString());
+            }
 
         }
 
