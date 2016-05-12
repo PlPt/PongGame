@@ -9,24 +9,36 @@ using System.Windows.Forms;
 
 namespace Pong
 {
+    /// <summary>
+    /// Form for the game
+    /// </summary>
     public partial class PongForm : Form
     {
+        #region varDef
         PongGame game;
+        bool msg = false;
+        #endregion
 
-     
+        /// <summary>
+        /// Form constructor, init the form and the game
+        /// </summary>
         public PongForm()
         {
             InitializeComponent();
-            game = new PongGame();
-            game.gameRenderSize = gameRenderer.ClientSize;
-            game.init();
-            gameRenderer.Game = game;
+            game = new PongGame(gameRenderer.ClientSize);
+           gameRenderer.Game = game; // Set game object to renderer
             game.speed = (int)speedPicker.Value;
 
+            //Resize Event, changes game Sizes
             gameRenderer.Resize += new EventHandler((s, e) => { game.gameRenderSize = gameRenderer.ClientSize; game.rightRacket.Position.X = gameRenderer.ClientSize.Width - Racket.xDistance; });
            
         }
-        bool msg = false;
+      
+        /// <summary>
+        /// Main Game timer for  "real time"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void timer_Tick(object sender, EventArgs e)
         {
             if (game.Status == PongGame.GameStatus.Running)
@@ -59,6 +71,12 @@ namespace Pong
             }
         }
 
+        /// <summary>
+        /// Key Events for control the game   
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="keyData"></param>
+        /// <returns></returns>
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             if (gameRenderer.Focused)
@@ -78,6 +96,10 @@ namespace Pong
             }
         } 
 
+        /// <summary>
+        ///  Key Events for control the game   
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnKeyUp(KeyEventArgs e)
         {
             if (gameRenderer.Focused)
@@ -94,24 +116,13 @@ namespace Pong
                 base.OnKeyUp(e);
             }
         }
-       /* protected override void OnResizeEnd(EventArgs e)
-        {
-         if(game!=null)   game.gameRenderSize = gameRenderer.ClientSize;
-            base.OnResize(e);
-        }
+               
 
-        protected override void OnResize(EventArgs e)
-        {
-            OnResizeEnd(e);
-            base.OnResize(e);
-        }   */
-        
-
-        private void PongForm_KeyUp(object sender, KeyEventArgs e)
-        {
-          
-        }
-
+        /// <summary>
+        /// Start Button to start the game
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnStart_Click(object sender, EventArgs e)
         {
             msg = false;
@@ -121,15 +132,17 @@ namespace Pong
             gameRenderer.Focus();
         }
 
+        /// <summary>
+        /// Speed change listener
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void speedPicker_ValueChanged(object sender, EventArgs e)
         {
             game.speed = (int)speedPicker.Value;
         }
 
-        private void PongForm_Load(object sender, EventArgs e)
-        {
-
-        }
+       
        
     }
 }

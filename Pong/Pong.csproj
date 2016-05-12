@@ -52,6 +52,7 @@
       <DependentUpon>GameRenderer.cs</DependentUpon>
     </Compile>
     <Compile Include="IDrawable.cs" />
+    <Compile Include="Point.cs" />
     <Compile Include="PongForm.cs">
       <SubType>Form</SubType>
     </Compile>

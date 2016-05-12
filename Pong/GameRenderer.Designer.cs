@@ -38,6 +38,7 @@
             this.DoubleBuffered = true;
             this.Name = "GameRenderer";
             this.Size = new System.Drawing.Size(594, 364);
+            this.Load += new System.EventHandler(this.GameRenderer_Load);
             this.ResumeLayout(false);
 
         }

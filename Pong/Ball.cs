@@ -6,37 +6,59 @@ using System.Text;
 
 namespace Pong
 {
+    /// <summary>
+    /// Repesents a Ball
+    /// </summary>
     public class Ball   : IDrawable
     {
-
+        #region varDef
         public static List<int> _ii = new List<int>();
         public Point Position { get; set; }
         public Size Size { get; set; }
 
        public  int dx = -150;
        public  int dy = 48;
+        #endregion
 
-       //float G = 1.81f;
 
-        public Ball(Point initPos,Size size)
+          /// <summary>
+          /// Construcor to create a Ball with initial position and fixed size
+          /// </summary>
+          /// <param name="initPos"></param>
+          /// <param name="size"></param>
+       public Ball(Point initPos,Size size)
         {
             Position = initPos;
             this.Size = size;
 
         }
 
+        /// <summary>
+        /// IDrawable Draw Method to draw the Object with Graphics
+        /// </summary>
+        /// <param name="g">Graphics use to draw</param>
         public void Draw(Graphics g)
         {
             Brush b = new SolidBrush(Color.Blue);
            g.FillEllipse(b, new Rectangle(Position.X, Position.Y, Size.Width, Size.Height));
         }
 
+        /// <summary>
+        /// Moves a Ball around
+        /// </summary>
+        /// <param name="elapsedSeconds">Timer elapsed seconds, for calculating position</param>
+        /// <param name="speed">Ball speed</param>
         public void Move(double elapsedSeconds,int speed)
         {
             Position.X += (int)(dx * elapsedSeconds) * speed;
             Position.Y += (int)((dy * elapsedSeconds) * speed);
         }
 
+        /// <summary>
+        /// Checks whether the ball is colliding the walls
+        /// </summary>
+        /// <param name="gameRenderSize">Game redner size</param>
+        /// <returns>Colliding Status</returns>
         public PongGame.GameStatus isCollidingWall(Size gameRenderSize)
         {
              if (Position.X < 0)   // Left
@@ -80,6 +102,11 @@ namespace Pong
             return PongGame.GameStatus.Running;
         }
 
+        /// <summary>
+        /// Checks whether ball is Colliding Rackets, for KI
+        /// </summary>
+        /// <param name="gameRenderSize">Game size</param>
+        /// <returns>RacketDirection</returns>
         public Racket.Direction isCollidingWallEX(Size gameRenderSize)
         {
             if (Position.X < 0)   // Left
@@ -119,7 +146,13 @@ namespace Pong
             return Racket.Direction.None;
         }
 
-
+             /// <summary>
+             /// Calc the next Racket colliding position and move the Racket to this pos
+             /// </summary>
+             /// <param name="g">GameObject</param>
+             /// <param name="b">Ball to check</param>
+             /// <param name="r">Racket to check</param>
+             /// <param name="dir">Racket direction</param>
         public static void calc(PongGame g,Ball b,Racket r,Racket.Direction dir)
         {
             Ball imag = new Ball(new Point(b.Position.X, b.Position.Y), new Size(50, 50));
@@ -141,6 +174,10 @@ namespace Pong
            
         }
 
+        /// <summary>
+        /// Clones a Ball Object
+        /// </summary>
+        /// <returns>Cloned ball object</returns>
         public Ball Clone()
         {
             return (Ball)this.MemberwiseClone();

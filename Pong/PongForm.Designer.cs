@@ -107,9 +107,7 @@
             this.Controls.Add(this.gameRenderer);
             this.KeyPreview = true;
             this.Name = "PongForm";
-            this.Text = "Pong";
-            this.Load += new System.EventHandler(this.PongForm_Load);
-            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.PongForm_KeyUp);
+            this.Text = "Pong";        
             ((System.ComponentModel.ISupportInitialize)(this.speedPicker)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
