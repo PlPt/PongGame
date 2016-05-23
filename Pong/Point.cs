@@ -29,7 +29,7 @@ namespace Pong
         }
 
         /// <summary>
-        /// Converts teh PointObject into a string
+        /// Converts the PointObject into a string
         /// </summary>
         /// <returns>String representation of the Point object</returns>
         public override string ToString()
