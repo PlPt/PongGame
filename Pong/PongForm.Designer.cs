@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PongForm));
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.btnStart = new System.Windows.Forms.Button();
             this.speedPicker = new System.Windows.Forms.NumericUpDown();
@@ -105,9 +106,10 @@
             this.Controls.Add(this.speedPicker);
             this.Controls.Add(this.btnStart);
             this.Controls.Add(this.gameRenderer);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.Name = "PongForm";
-            this.Text = "Pong";        
+            this.Text = "Pong";
             ((System.ComponentModel.ISupportInitialize)(this.speedPicker)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

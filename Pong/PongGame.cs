@@ -98,7 +98,7 @@ namespace Pong
             checkColision(ball, leftRacket, Racket.Direction.Left);
             checkColision(ball, rightRacket, Racket.Direction.Right);
 
-            if( gameRenderSize.Width - ball.Position.X < 350 && ball.dx > 0 &&  !calc)
+            if( gameRenderSize.Width - ball.Position.X < 450 && ball.dx > 0 &&  !calc)
             {
                 Ball.calc(this, ball.Clone(), rightRacket, Racket.Direction.Right);
                 calc = true;
@@ -223,7 +223,7 @@ namespace Pong
         /// </summary>
         internal void init()
         {
-            ball = new Ball(new Point(430, 30), new Size(50, 50));
+            ball = new Ball(new Point(430, 130), new Size(50, 50));
             leftRacket = new Racket(new Point(Racket.xDistance, 20), new Size(10, 170));
             rightRacket = new Racket(new Point(gameRenderSize.Width - Racket.xDistance, 225), new Size(10, 170));
 
